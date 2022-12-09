@@ -601,7 +601,7 @@
             this.Controls.Add(this.toolStripMenu);
             this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.Name = "CodeTableGeneratorControl";
-            this.Size = new System.Drawing.Size(1190, 761);
+            this.Size = new System.Drawing.Size(1190, 768);
             this.Load += new System.EventHandler(this.CodeTableGeneratorControl_Load);
             this.toolStripMenu.ResumeLayout(false);
             this.toolStripMenu.PerformLayout();
