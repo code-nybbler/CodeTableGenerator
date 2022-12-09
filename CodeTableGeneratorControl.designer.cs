@@ -161,7 +161,6 @@
             this.txt_Desc.Name = "txt_Desc";
             this.txt_Desc.Size = new System.Drawing.Size(282, 26);
             this.txt_Desc.TabIndex = 12;
-            this.txt_Desc.Text = "Description";
             this.txt_Desc.TextChanged += new System.EventHandler(this.txt_Desc_TextChanged);
             // 
             // lbl_DescDataType

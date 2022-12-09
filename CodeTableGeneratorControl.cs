@@ -27,6 +27,7 @@ namespace CodeTableGenerator
         private int primaryReq, codeReq, descReq;
         private bool populateForm, populateViews;
         EntityMetadata EntityMetaData;
+        List<string> tables;
 
         public CodeTableGeneratorControl()
         {
@@ -41,6 +42,8 @@ namespace CodeTableGenerator
 
             solutions = new Dictionary<string, Guid>();
             lst_Format.SetSelected(0, true);
+
+            tables = new List<string>();
         }
 
         private void tsbClose_Click(object sender, EventArgs e)
@@ -155,6 +158,8 @@ namespace CodeTableGenerator
                         }
                         else if (populateViews) ExecuteMethodAsync(PopulateViews, "Populating views...");
                         else EnableInputs();
+
+                        tables.Add(tableSchema.ToLower());
                     },
                     AsyncArgument = null,
                     // Progress information panel size
@@ -494,43 +499,6 @@ namespace CodeTableGenerator
                                 CreateMemoAttribute(descSchema, descLabel, descLength, descReq);
                             }
                         }
-
-                        //if (populateForm) PopulateForms(EntityMetaData);
-                        //if (populateViews)
-                        //{
-                        //    string descriptionCell = string.IsNullOrEmpty(descLabel) ? string.Empty : $"<cell name='{descSchema.ToLower()}' width='300' />";
-
-                        //    string newLayout = $@"<grid name='resultset' object='{EntityMetaData.ObjectTypeCode.Value}' jump='{primarySchema.ToLower()}' select='1' preview='1' icon='1'>
-                        //                            <row name='result' id='{tableSchema.ToLower()}id'>
-                        //                                <cell name='{primarySchema.ToLower()}' width='150' />
-                        //                                <cell name='{codeSchema.ToLower()}' width='150' />
-                        //                                {descriptionCell}
-                        //                            </row>
-                        //                        </grid>";
-
-                        //    XmlDocument newLayoutDoc = new XmlDocument();
-                        //    newLayoutDoc.LoadXml(newLayout);
-
-                        //    string descriptionAttribute = string.IsNullOrEmpty(descLabel) ? string.Empty : $"<attribute name='{descSchema.ToLower()}' /> ";
-
-                        //    string newFetch = $@"<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false'>
-                        //                            <entity name='{tableSchema.ToLower()}'>
-                        //                                <order attribute='{primarySchema.ToLower()}' descending='false' />
-                        //                                <attribute name='{primarySchema.ToLower()}' />
-                        //                                <attribute name='{codeSchema.ToLower()}' />
-                        //                                {descriptionAttribute}
-                        //                            </entity>
-                        //                        </fetch>";
-
-                        //    List<Entity> views = RetrieveViews(EntityMetaData);
-
-                        //    ViewDefinition view;
-                        //    foreach (Entity entity in views.Where(x => x.GetAttributeValue<string>("layoutxml") != null))
-                        //    {
-                        //        view = new ViewDefinition(entity);
-                        //        PopulateView(view, newLayoutDoc, newFetch);
-                        //    }
-                        //}
                     }
                 }
                 catch (Exception ex)
@@ -720,7 +688,10 @@ namespace CodeTableGenerator
                 Work = (w, e) =>
                 {
                     // This code is executed in another thread
-                    PublishAllXmlRequest PublishRequest = new PublishAllXmlRequest();
+                    PublishXmlRequest PublishRequest = new PublishXmlRequest
+                    {
+                        ParameterXml = "<importexportxml><entities><entity>" + string.Join("</entity><entity>", tables.ToArray()) + "</entity></entities></importexportxml>"
+                    };
                     Service.Execute(PublishRequest);
 
                     w.ReportProgress(-1, "Publishing complete.");
@@ -733,6 +704,7 @@ namespace CodeTableGenerator
                 PostWorkCallBack = e =>
                 {
                     // This code is executed in the main thread
+                    tables.Clear();
                     EnableInputs();
                 },
                 AsyncArgument = null,

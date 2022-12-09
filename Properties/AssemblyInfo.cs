@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("CodeTableGenerator")]
-[assembly: AssemblyDescription("Makes creating code tables a faster, more standardized process")]
+[assembly: AssemblyDescription("Streamlines code table creation")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Luke Thomas")]
 [assembly: AssemblyProduct("CodeTableGenerator")]
