@@ -759,8 +759,23 @@ namespace CodeTableGenerator
 
                     if (!string.IsNullOrEmpty(descLabel))
                     {
-                        selectedTypeClassId = descDataType == "Single Line of Text" ? singleLineClassId : multiLineClassId;
-                        descRowXml = $@"<row>
+                        if (descDataType == "Single Line of Text")
+                        {
+                            selectedTypeClassId = singleLineClassId;
+                            descRowXml = $@"<row>
+									        <cell id=""{Guid.NewGuid()}"">
+										        <labels>
+											        <label description=""{descLabel}"" languagecode=""1033"" />
+										        </labels>
+										        <control id=""{descSchema.ToLower()}"" classid=""{selectedTypeClassId}"" datafieldname=""{descSchema.ToLower()}"" disabled=""false"" />
+									        </cell>
+								        </row>";
+
+                        }
+                        else
+                        {
+                            selectedTypeClassId = multiLineClassId;
+                            descRowXml = $@"<row>
 									        <cell id=""{Guid.NewGuid()}"" rowspan=""4"">
 										        <labels>
 											        <label description=""{descLabel}"" languagecode=""1033"" />
@@ -769,6 +784,7 @@ namespace CodeTableGenerator
 									        </cell>
 								        </row>
                                         <row></row><row></row><row></row>";
+                        }
                     }
 
                     string newFormXml = $@"<form>
